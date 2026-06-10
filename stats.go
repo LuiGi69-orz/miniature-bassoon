@@ -31,9 +31,9 @@ func ProcessRepo(email string) map[int]int {
 	for i := 0; i < TotDays; i++ {
 		Commits[i] = 0
 	}
-	
+
 	for _, Repo := range AllRepo {
-		Commits = FillIt(Commits, email, Repo)
+		Commits = FillIt(Commits, email, Repo) //each time copy is created not pass by refrence
 	}
 	return Commits
 }
