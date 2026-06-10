@@ -25,37 +25,30 @@ func Sort(commits map[int]int) []int{
 type col []int
 func BuildCols(keys []int,commits map[int]int) map[int]col{
 	cols := make(map[int]col)
-	column := col{}
-	for _, DayNumber := range keys{
-		week := DayNumber/7
-		weekday := DayNumber%7
+	today := int(time.Now().Weekday())
+	for _, daysAgo := range keys{
+		weekday := (today - (daysAgo % 7) + 7) % 7 //weekday := int(date.Weekday())
+        week := (daysAgo + today) / 7
 
-		if weekday == 0{
-			column = col{}
-		}
-		column = append(column, commits[DayNumber])
-
-		if weekday == 6{
-			cols[week] = column
-		}
-	}
-	if len(column) > 0 {
-		cols[keys[len(keys)-1]/7] = column
+		if _, ok := cols[week]; !ok {
+            cols[week] = make(col, 7)
+        }
+        cols[week][weekday] = commits[daysAgo]
 	}
 	return cols
 }
 
 func printCells(cols map[int]col){
 	printMonths()
-	currOffset := CalcOffset()
-	for i := 6; i >= 0; i--{
+	today := int(time.Now().Weekday())
+	for i := 0; i <= 6; i++{
 		for j := 27; j >= 0; j--{
 
 			if j == 27{
 				printCols(i)
 			}
 			if col,ok := cols[j]; ok{
-				if j == 0 && i == currOffset {//special cell for today
+				if j == 0 && i == today {//special cell for today
 					PrintCell(col[i],true)
 					continue
 				}else {
@@ -137,3 +130,81 @@ func PrintCell(day int , today bool){
     }
     fmt.Printf(escape + str + "\033[0m", day) 
 }
+
+
+// The simpler approach is conceptually cleaner:
+// Don't store commits by "days ago". Store them by actual date.
+
+// Instead Commits[daysAgo]++
+
+// which forces  to constantly convert:
+// daysAgo -> weekday
+// daysAgo -> week column
+// daysAgo -> calendar date
+// and that's where all the offset headaches come from.
+
+// Store by date instead
+
+// Change the map to:
+// map[time.Time]int
+
+// where the key is the start of the day:
+// day := CalcPresentDate(c.Author.When)
+// Commits[day]++
+
+
+// In ProcessRepo
+// func ProcessRepo(email string) map[time.Time]int {
+//     commits := make(map[time.Time]int)
+//     ...
+// }
+
+
+// In FillIt
+// Instead of:
+// daysAgo := CountDist(c.Author.When)
+// if daysAgo < TotDays {
+//     Commits[daysAgo]++
+// }
+
+// do:
+// day := CalcPresentDate(c.Author.When)
+// cutoff := CalcPresentDate(time.Now()).AddDate(0, 0, -TotDays)
+// if !day.Before(cutoff) {
+//     Commits[day]++
+// }
+
+// Building columns becomes trivial
+// For each date:
+// weekday := int(day.Weekday())
+// No offset.
+// No modulo tricks.
+// No dependence on today's weekday.
+
+// The weekday is literally stored in the date.
+
+// Computing the week column
+// Let
+// start := CalcPresentDate(time.Now()).AddDate(0, 0, -TotDays)
+
+// Then:
+// days := int(day.Sub(start).Hours() / 24)
+// week := days / 7
+
+
+// Example
+
+// Suppose today is Thursday June 11.
+// A commit from Wednesday June 10:
+
+// day = 2026-06-10
+// weekday := int(day.Weekday())
+
+// gives:
+// 3 (Wednesday)
+
+// forever.
+// Tomorrow, next week, next month:
+// day.Weekday()
+// still returns Wednesday.
+// Nothing shifts.

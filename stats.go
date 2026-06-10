@@ -54,9 +54,9 @@ func FillIt(Commits map[int]int, email, Repo string) map[int]int {
 		return Commits
 	}
 
-	OffSet := CalcOffset()
+	// OffSet := CalcOffset()
 	err = iterator.ForEach(func(c *object.Commit) error {
-		daysAgo := OffSet - (CountDist(c.Author.When)%7) 
+		daysAgo := CountDist(c.Author.When) 
 		if c.Author.Email != email {
 			return nil
 		}
