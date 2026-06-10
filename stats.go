@@ -33,7 +33,7 @@ func ProcessRepo(email string) map[int]int {
 	}
 
 	for _, Repo := range AllRepo {
-		Commits = FillIt(Commits, email, Repo) //each time copy is created not pass by refrence
+		Commits = FillIt(Commits, email, Repo)  //no refrencing only passing by value
 	}
 	return Commits
 }
