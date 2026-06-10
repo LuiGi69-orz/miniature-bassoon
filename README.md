@@ -105,15 +105,35 @@ The contribution graph:
 ## Example Output
 
 ```text
-     Jan    Feb    Mar    Apr
+Legend:
+       ⬜ 0 commits
+       ⬜ 1-4 commits
+       🟨 5-9 commits
+       🟩 10+ commits
+       🟪 Today
 
-Sun  -  -  1  3  0  5
-Mon  -  2  0  4  7  1
-Tue  -  -  3  2  0  8
-Wed  1  4  2  0  3  6
-Thu  -  -  -  1  2  3
-Fri  2  1  0  4  5  7
-Sat  -  3  1  0  2  4
+
+      Just for cell look not how actual table structure
+
+             Jan  Feb  Mar  Apr  May
+       
+       Sun   ⬛   ⬜   🟨   🟩   ⬜
+       Mon   ⬜   🟨   🟩   ⬛   🟪
+       Tue   🟨   🟩   ⬜   ⬛   🟨
+       Wed   🟩   ⬜   ⬛   🟨   🟩
+       Thu   ⬛   ⬜   🟨   🟩   ⬜
+       Fri   ⬜   🟨   🟩   ⬛   🟨
+       Sat   🟩   ⬛   ⬜   🟨   🟩
+
+       Actual table structure without colorings:
+                                   Jan             Feb             Mar             Apr             May             Jun    
+       Sat  -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   - 
+       Fri  -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   - 
+       Thu  -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   - 
+       Wed  -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   - 
+       Tue  -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   - 
+       Mon  -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   - 
+       Sun  -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   - 
 ```
 
 ## Future Improvements
