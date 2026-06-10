@@ -21,6 +21,13 @@ func ProcessRepo(email string) map[int]int {
 	AllRepo := Read(DotFilePath)
 
 	Commits := make(map[int]int, TotDays)
+
+	//When printstats.go loops through the sorted keys to build the columns, 
+	// any missing days completely throw off the calendar grid calculation. 
+	// If you go three days without committing, the grid slips out of alignment 
+	// 			because : 
+	//			it assumes the data points are perfectly consecutive.
+	
 	for i := 0; i < TotDays; i++ {
 		Commits[i] = 0
 	}
@@ -60,6 +67,20 @@ func FillIt(Commits map[int]int, email, Repo string) map[int]int {
 
 	return Commits
 }
+//Your grid has fixed rows for the days of the week:
+// Row 0 = Sunday
+// Row 1 = Monday
+// Row 2 = Tuesday
+// Row 3 = Wednesday... and so on.
+// If you don't use an offset, 
+// the program uses the raw "days ago" number to determine the row using DayNumber % 7. 
+// Look at what would happen to a commit you make : 
+//		Today(which is a Wednesday):
+//			Today's commit = 0 days ago => 0 % 7 = 0 -> The program prints today's commit on the Sunday row.
+// 		Tomorrow (Thursday), that same commit becomes 1 day ago:1 % 7 = 1 ->
+// 			 The program now prints it on the Monday row.
+// 
+// Every time you wake up, your entire history would slide down by one row!
 
 func CalcOffset() int {
 	var OffSet int
